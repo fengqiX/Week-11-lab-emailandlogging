@@ -52,7 +52,7 @@ public class WebMailService {
         Properties props = new Properties();
         props.put("mail.transport.protocol", "smtps");
         props.put("mail.smtps.host", "smtp.gmail.com");
-        props.put("mail.smtps.port", 465);
+        props.put("mail.smtps.port", "465");
         props.put("mail.smtps.auth", "true");
         props.put("mai.smtps.quitwait", "false");
         Session session = Session.getDefaultInstance(props);
@@ -68,7 +68,7 @@ public class WebMailService {
         }
         
         // address the message
-        Address fromAddress = new InternetAddress("cprg352@gmail.com");
+        Address fromAddress = new InternetAddress("");
         Address toAddress = new InternetAddress(to);
         message.setFrom(fromAddress);
         message.setRecipient(Message.RecipientType.TO, toAddress);

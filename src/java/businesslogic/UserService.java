@@ -1,9 +1,12 @@
 package businesslogic;
 
+import dataaccess.NotesDBException;
 import dataaccess.UserDB;
 import domainmodel.Role;
 import domainmodel.User;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserService {
 
@@ -41,5 +44,18 @@ public class UserService {
         Role role = new Role(2);  // default regular user role
         user.setRole(role);
         return userDB.insert(user);
+    }
+
+    public User getByUUID(String uuid) {
+        try {
+            return userDB.getUserByUUID(uuid);
+        } catch (NotesDBException ex) {
+            Logger.getLogger(UserService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public int update(User user) throws Exception {
+        return userDB.update(user);
     }
 }

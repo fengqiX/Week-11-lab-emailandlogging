@@ -17,7 +17,7 @@ public class UserDB {
     public int insert(User user) throws NotesDBException {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         EntityTransaction trans = em.getTransaction();
-        
+
         try {
             trans.begin();
             em.persist(user);
@@ -35,7 +35,7 @@ public class UserDB {
     public int update(User user) throws NotesDBException {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         EntityTransaction trans = em.getTransaction();
-        
+
         try {
             trans.begin();
             em.merge(user);
@@ -72,7 +72,7 @@ public class UserDB {
      */
     public User getUser(String username) throws NotesDBException {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
-        
+
         try {
             User user = em.find(User.class, username);
             return user;
@@ -84,10 +84,16 @@ public class UserDB {
         }
     }
 
+    public User getUserByEmail(String email) throws NotesDBException {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        User user = em.createNamedQuery("User.findByEmail", User.class).setParameter("email", email).getSingleResult();
+        return user;
+    }
+
     public int delete(User user) throws NotesDBException {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         EntityTransaction trans = em.getTransaction();
-        
+
         try {
             trans.begin();
             em.remove(em.merge(user));
@@ -97,6 +103,19 @@ public class UserDB {
             trans.rollback();
             Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, "Cannot delete " + user.toString(), ex);
             throw new NotesDBException("Error deleting user");
+        } finally {
+            em.close();
+        }
+    }
+
+    public User getUserByUUID(String uuid)throws NotesDBException {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        try{
+        User user = em.createNamedQuery("User.findByResetPasswordUUID", User.class).setParameter("resetPasswordUUID", uuid).getSingleResult();
+        return user;
+        }catch (Exception ex) {
+            Logger.getLogger(UserDB.class.getName()).log(Level.SEVERE, "Cannot read users", ex);
+            throw new NotesDBException("Error getting Users");
         } finally {
             em.close();
         }
